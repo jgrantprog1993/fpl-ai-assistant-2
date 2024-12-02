@@ -1,13 +1,32 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import { auth, database } from '../utils/firebaseConfig'; // Import Firebase config
+import { ref, set } from 'firebase/database'; // Import Firebase database functions
 
 const AddTeam = () => {
   const [teamId, setTeamId] = useState('');
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic to add the team using the FPL API
-    console.log('Team ID:', teamId);
-    // You can add API call logic here
+    const user = auth.currentUser; // Get the current user
+
+    if (user) {
+      try {
+        // Add the team ID to the database for the current user
+        const userTeamRef = ref(database, `users/${user.uid}/teams/${teamId}`);
+        await set(userTeamRef, { teamId });
+
+        console.log('Team added successfully:', teamId);
+
+        // Redirect to the team page
+        router.push('/myteam');
+      } catch (error) {
+        console.error('Error adding team:', error);
+      }
+    } else {
+      console.error('No user is logged in');
+    }
   };
 
   return (
