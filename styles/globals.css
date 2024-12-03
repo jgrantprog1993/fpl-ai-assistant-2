@@ -3,10 +3,34 @@
 @tailwind utilities;
 
 body {
-	@apply min-h-screen select-none bg-zinc-50 text-zinc-900 antialiased p-safe dark:bg-zinc-900 dark:text-zinc-50;
-
-	/* PWA enhancements */
-	-webkit-overflow-scrolling: touch;
-	-webkit-tap-highlight-color: transparent;
-	-webkit-touch-callout: none;
+  @apply min-h-screen bg-gray-100 text-gray-900 antialiased;
+  background-image: url('/images/background.jpg'); /* Path to your wallpaper */
+  background-size: cover; /* Cover the entire viewport */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent repeating */
+  /* overflow: hidden;  Prevent overflow */
 }
+
+.container {
+  @apply mx-auto p-4;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold text-gray-800;
+}
+
+main {
+  @apply bg-transparent; /* Ensure main is transparent */
+}
+
+body::before {
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+	z-index: -1; /* Place behind other content */
+  }
+/* Additional styles as needed */

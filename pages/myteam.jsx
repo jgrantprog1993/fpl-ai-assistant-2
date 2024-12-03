@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { auth, database } from '../utils/firebaseConfig';
 import { ref, get } from 'firebase/database';
+import Page from '@/components/page'
+import Section from '@/components/section'
+
 
 const MyTeam = () => {
   const [teamData, setTeamData] = useState(null);
@@ -48,6 +51,8 @@ const MyTeam = () => {
   }
 
   return (
+    <Page>
+		<Section>
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">My Team</h1>
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -63,6 +68,8 @@ const MyTeam = () => {
         {/* Add more fields as needed */}
       </div>
     </div>
+    </Section>
+    </Page>
   );
 };
 

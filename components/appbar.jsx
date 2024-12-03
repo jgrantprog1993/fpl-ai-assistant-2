@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { auth, database } from '../utils/firebaseConfig'; // Import database
+import { auth, database } from '../utils/firebaseConfig';
+import { ref, get } from 'firebase/database';
 import { signOut } from 'firebase/auth';
-import { ref, get } from 'firebase/database'; // Import Firebase database functions
+import Link from 'next/link';
 
 const Appbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,27 +13,25 @@ const Appbar = () => {
   const router = useRouter();
 
   useEffect(() => {
-	const unsubscribe = auth.onAuthStateChanged(async (user) => {
-	  if (user) {
-		setIsLoggedIn(true);
-		// Fetch user data from the database
-		const userRef = ref(database, 'users/' + user.uid);
-		const snapshot = await get(userRef);
-		if (snapshot.exists()) {
-		  const data = snapshot.val();
-		  setUserName({ firstName: data.firstName, lastName: data.lastName });
-		  // Check if the user has a team linked
-		  if (data.teams && Object.keys(data.teams).length > 0) {
-			setHasTeam(true);
-		  }
-		}
-	  } else {
-		setIsLoggedIn(false);
-		setUserName({ firstName: '', lastName: '' });
-		setHasTeam(false);
-	  }
-	});
-	return () => unsubscribe();
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        const userRef = ref(database, 'users/' + user.uid);
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          setUserName({ firstName: data.firstName, lastName: data.lastName });
+          if (data.teams && Object.keys(data.teams).length > 0) {
+            setHasTeam(true);
+          }
+        }
+      } else {
+        setIsLoggedIn(false);
+        setUserName({ firstName: '', lastName: '' });
+        setHasTeam(false);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleLogout = async () => {
@@ -49,18 +47,18 @@ const Appbar = () => {
   };
 
   return (
-    <div className='fixed top-0 left-0 z-20 w-full bg-zinc-900 pt-safe'>
-      <header className='border-b bg-zinc-100 px-safe dark:border-zinc-800 dark:bg-zinc-900'>
+    <div className='fixed top-0 left-0 z-20 w-full bg-transparent backdrop-blur-md pt-safe'>
+      <header className='border-b bg-black bg-opacity-30 px-safe dark:border-zinc-800'>
         <div className='mx-auto flex h-20 max-w-screen-md items-center justify-between px-6'>
           <Link href='/' legacyBehavior>
-            <a className='font-medium'>FPL AI Assistant</a>
+            <a className='font-medium text-white'>FPL AI Assistant</a>
           </Link>
 
           <nav className='flex items-center space-x-6'>
             <div className='hidden sm:block'>
               <div className='flex items-center space-x-6'>
                 <Link href={hasTeam ? '/myteam' : '/addteam'} legacyBehavior>
-                  <a className='font-medium'>{hasTeam ? 'My Team' : 'Link Team'}</a>
+                  <a className='font-medium text-white'>{hasTeam ? 'My Team' : 'Link Team'}</a>
                 </Link>
               </div>
             </div>
@@ -75,33 +73,14 @@ const Appbar = () => {
               onClick={() => setShowDropdown(!showDropdown)}
             >
               {showDropdown && (
-                <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50'>
-                  {isLoggedIn ? (
-                    <>
-                      <div className='px-4 py-2 text-sm text-gray-700'>
-                        Logged in user: <br/> {userName.firstName} {userName.lastName}
-                      </div>
-                      <button
-                        onClick={handleLogout}
-                        className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                      >
-                        Logout
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link href='/login' legacyBehavior>
-                        <a className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'>
-                          Login
-                        </a>
-                      </Link>
-                      <Link href='/signup' legacyBehavior>
-                        <a className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'>
-                          Signup
-                        </a>
-                      </Link>
-                    </>
-                  )}
+                <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1'>
+                  <a
+                    href='#'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </a>
                 </div>
               )}
             </div>
