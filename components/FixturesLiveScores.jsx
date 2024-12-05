@@ -97,7 +97,7 @@ const FixturesLiveScores = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/images/background.jpg')" }}>
+    <div className="min-h-screen bg-cover bg-center" >
       <Appbar />
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Gameweek {currentGameweek} Fixtures</h1>
@@ -122,6 +122,7 @@ const FixturesLiveScores = () => {
                 const homeScore = fixture.team_h_score;
                 const awayScore = fixture.team_a_score;
                 const isFinished = fixture.finished;
+                const matchDateTime = new Date(fixture.kickoff_time);
 
                 return (
                     <li key={fixture.id} className="grid grid-cols-3 border-b py-2">
@@ -129,18 +130,21 @@ const FixturesLiveScores = () => {
                       <img src={teamLogos[homeTeam]} alt={`${homeTeam} logo`} className="w-6 h-6 mr-2" />
                       <span className="font-bold">{homeTeam}</span>
                     </div>
-                    <div className="fjustify-center" style={{ width: '150px', textAlign: 'center' }}> {/* Adjusted width and text alignment */}
+                    <div className="justify-center" style={{ width: '150px', textAlign: 'center' }}> {/* Adjusted width and text alignment */}
                       {isFinished ? (
                         <span className="text-green-600 font-bold">
                           {homeScore} - {awayScore}
                         </span>
                       ) : (
-                        <span className="text-gray-500">Upcoming</span>
+                        <span className="text-gray-500 text-xs">
+                        <p className='block'>{matchDateTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} </p>
+                        <p className='block'>{matchDateTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })}</p>
+                      </span>
                       )}
                     </div>
                     <div className="flex items-center">
+                    <img src={teamLogos[awayTeam]} alt={`${awayTeam} logo`} className="w-6 h-6 mr-2" />
                       <span className="font-bold">{awayTeam}</span>
-                      <img src={teamLogos[awayTeam]} alt={`${awayTeam} logo`} className="w-6 h-6 ml-2" />
                     </div>
                   </li>
                 );
