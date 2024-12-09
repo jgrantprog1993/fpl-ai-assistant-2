@@ -50,18 +50,17 @@ const Appbar = () => {
     <div className='fixed top-0 left-0 z-20 w-full bg-transparent backdrop-blur-md pt-safe'>
       <header className='border-b bg-black bg-opacity-30 px-safe dark:border-zinc-800'>
         <div className='mx-auto flex h-20 max-w-screen-md items-center justify-between px-6'>
-          <Link href='/' legacyBehavior>
-            <a className='font-medium text-white'>FPL AI Assistant</a>
-          </Link>
-
-          <nav className='flex items-center space-x-6'>
-            <div className='hidden sm:block'>
-              <div className='flex items-center space-x-6'>
-                <Link href={hasTeam ? '/myteam' : '/addteam'} legacyBehavior>
-                  <a className='font-medium text-white'>{hasTeam ? 'My Team' : 'Link Team'}</a>
-                </Link>
-              </div>
-            </div>
+			<Link href='/' passHref legacyBehavior>
+				<img src='/images/pl-main-logo.png' alt='FPL AI Assistant' className='w-10 h-10' style={{ cursor: 'pointer' }} />
+			</Link>
+			<nav className='flex items-center space-x-6'>
+			<div className='hidden sm:block'>
+				<div className='flex items-center space-x-6'>
+				<Link href={hasTeam ? '/myteam' : '/addteam'} legacyBehavior>
+					<a className='font-medium text-white'>{hasTeam ? 'My Team' : 'Link Team'}</a>
+				</Link>
+				</div>
+			</div>
 
             <div
               title='User Menu'

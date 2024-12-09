@@ -1,28 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Appbar from '../components/appbar'; // Import your Appbar component
+import LiveScores from '../components/liveScores'; // Import the LiveScores component
+import teamLogos from '../utils/teamLogos'; // Adjust the path as necessary
 
-const teamLogos = {
-  'Liverpool': '/images/logos/liverpool.png',
-  'Arsenal': '/images/logos/arsenal.png',
-  'Chelsea': '/images/logos/chelsea.png',
-  'Man City': '/images/logos/man_city.png',
-  'Man Utd': '/images/logos/man_utd.png',
-  'Spurs': '/images/logos/spurs.png',
-  'Aston Villa': '/images/logos/aston_villa.png',
-  'Bournemouth': '/images/logos/bournemouth.png',
-  'Brentford': '/images/logos/brentford.png',
-  'Brighton': '/images/logos/brighton.png',
-  'Burnley': '/images/logos/burnley.png',
-  'Crystal Palace': '/images/logos/crystal_palace.png',
-  'Everton': '/images/logos/everton.png',
-  'Fulham': '/images/logos/fulham.png',
-  'Southampton': '/images/logos/southampton.png',
-  'Newcastle': '/images/logos/newcastle.png',
-  'Nott`m Forest': '/images/logos/nott_forest.png',
-  'Ipswich': '/images/logos/ipswich.png',
-  'West Ham': '/images/logos/west_ham.png',
-  'Wolves': '/images/logos/wolves.png'
-};
 
 const FixturesLiveScores = () => {
   const [fixtures, setFixtures] = useState([]);
@@ -97,7 +77,7 @@ const FixturesLiveScores = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/images/background.jpg')" }}>
+    <div className="min-h-screen bg-cover bg-center" >
       <Appbar />
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Gameweek {currentGameweek} Fixtures</h1>
@@ -121,29 +101,38 @@ const FixturesLiveScores = () => {
                 const awayTeam = teams[fixture.team_a] || fixture.team_a;
                 const homeScore = fixture.team_h_score;
                 const awayScore = fixture.team_a_score;
-                const isFinished = fixture.finished;
-
+                const isFinished = fixture.finished_provisional;
+                const matchDateTime = new Date(fixture.kickoff_time);
+                // console.log(fixture.finished_provisional, fixture.minutes);
+                // console.log(fixture.finished);
+                if (!fixture.finished_provisional && fixture.minutes > 0) {
+                  return <LiveScores key={fixture.id} />;
+                } else {
                 return (
                     <li key={fixture.id} className="grid grid-cols-3 border-b py-2">
                     <div className="flex items-center">
                       <img src={teamLogos[homeTeam]} alt={`${homeTeam} logo`} className="w-6 h-6 mr-2" />
                       <span className="font-bold">{homeTeam}</span>
                     </div>
-                    <div className="fjustify-center" style={{ width: '150px', textAlign: 'center' }}> {/* Adjusted width and text alignment */}
+                    <div className="justify-center" style={{ width: '150px', textAlign: 'center' }}> {/* Adjusted width and text alignment */}
                       {isFinished ? (
                         <span className="text-green-600 font-bold">
                           {homeScore} - {awayScore}
                         </span>
                       ) : (
-                        <span className="text-gray-500">Upcoming</span>
+                        <span className="text-gray-500 text-xs">
+                        <p className='block'>{matchDateTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} </p>
+                        <p className='block'>{matchDateTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })}</p>
+                      </span>
                       )}
                     </div>
                     <div className="flex items-center">
+                    <img src={teamLogos[awayTeam]} alt={`${awayTeam} logo`} className="w-6 h-6 mr-2" />
                       <span className="font-bold">{awayTeam}</span>
-                      <img src={teamLogos[awayTeam]} alt={`${awayTeam} logo`} className="w-6 h-6 ml-2" />
                     </div>
                   </li>
                 );
+              }
               })}
             </ul>
           )}
