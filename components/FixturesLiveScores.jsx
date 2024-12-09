@@ -1,28 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Appbar from '../components/appbar'; // Import your Appbar component
+import LiveScores from '../components/liveScores'; // Import the LiveScores component
+import teamLogos from '../utils/teamLogos'; // Adjust the path as necessary
 
-const teamLogos = {
-  'Liverpool': '/images/logos/liverpool.png',
-  'Arsenal': '/images/logos/arsenal.png',
-  'Chelsea': '/images/logos/chelsea.png',
-  'Man City': '/images/logos/man_city.png',
-  'Man Utd': '/images/logos/man_utd.png',
-  'Spurs': '/images/logos/spurs.png',
-  'Aston Villa': '/images/logos/aston_villa.png',
-  'Bournemouth': '/images/logos/bournemouth.png',
-  'Brentford': '/images/logos/brentford.png',
-  'Brighton': '/images/logos/brighton.png',
-  'Burnley': '/images/logos/burnley.png',
-  'Crystal Palace': '/images/logos/crystal_palace.png',
-  'Everton': '/images/logos/everton.png',
-  'Fulham': '/images/logos/fulham.png',
-  'Southampton': '/images/logos/southampton.png',
-  'Newcastle': '/images/logos/newcastle.png',
-  'Nott`m Forest': '/images/logos/nott_forest.png',
-  'Ipswich': '/images/logos/ipswich.png',
-  'West Ham': '/images/logos/west_ham.png',
-  'Wolves': '/images/logos/wolves.png'
-};
 
 const FixturesLiveScores = () => {
   const [fixtures, setFixtures] = useState([]);
@@ -121,9 +101,13 @@ const FixturesLiveScores = () => {
                 const awayTeam = teams[fixture.team_a] || fixture.team_a;
                 const homeScore = fixture.team_h_score;
                 const awayScore = fixture.team_a_score;
-                const isFinished = fixture.finished;
+                const isFinished = fixture.finished_provisional;
                 const matchDateTime = new Date(fixture.kickoff_time);
-
+                // console.log(fixture.finished_provisional, fixture.minutes);
+                // console.log(fixture.finished);
+                if (!fixture.finished_provisional && fixture.minutes > 0) {
+                  return <LiveScores key={fixture.id} />;
+                } else {
                 return (
                     <li key={fixture.id} className="grid grid-cols-3 border-b py-2">
                     <div className="flex items-center">
@@ -148,6 +132,7 @@ const FixturesLiveScores = () => {
                     </div>
                   </li>
                 );
+              }
               })}
             </ul>
           )}
