@@ -9,16 +9,20 @@ const teamLogos = {
     'Bournemouth': '/images/logos/bournemouth.png',
     'Brentford': '/images/logos/brentford.png',
     'Brighton': '/images/logos/brighton.png',
-    'Burnley': '/images/logos/burnley.png',
+    'Leicester': '/images/logos/leicester.png',
     'Crystal Palace': '/images/logos/crystal_palace.png',
     'Everton': '/images/logos/everton.png',
     'Fulham': '/images/logos/fulham.png',
     'Southampton': '/images/logos/southampton.png',
     'Newcastle': '/images/logos/newcastle.png',
-    'Nott`m Forest': '/images/logos/nott_forest.png',
+    'Nottm Forest': '/images/logos/nott_forest.png',
     'Ipswich': '/images/logos/ipswich.png',
     'West Ham': '/images/logos/west_ham.png',
     'Wolves': '/images/logos/wolves.png'
   };
+
+export function sanitizeTeamName(teamName) {
+    return teamName.replace(/'/g, ""); // Removes all apostrophes
+  }
   
   export default teamLogos;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Appbar from '../components/appbar'; // Import your Appbar component
 import LiveScores from '../components/liveScores'; // Import the LiveScores component
 import teamLogos from '../utils/teamLogos'; // Adjust the path as necessary
-
+import { sanitizeTeamName } from '../utils/teamLogos'; 
 
 const FixturesLiveScores = () => {
   const [fixtures, setFixtures] = useState([]);
@@ -97,20 +97,24 @@ const FixturesLiveScores = () => {
           ) : (
             <ul className="space-y-4">
               {fixtures.map((fixture) => {
-                const homeTeam = teams[fixture.team_h] || fixture.team_h;
-                const awayTeam = teams[fixture.team_a] || fixture.team_a;
+                const homeTeam = sanitizeTeamName(teams[fixture.team_h]) || sanitizeTeamName(fixture.team_h);
+                const awayTeam = sanitizeTeamName(teams[fixture.team_a]) || sanitizeTeamName(fixture.team_a);
                 const homeScore = fixture.team_h_score;
                 const awayScore = fixture.team_a_score;
                 const isFinished = fixture.finished_provisional;
                 const matchDateTime = new Date(fixture.kickoff_time);
                 // console.log(fixture.finished_provisional, fixture.minutes);
                 // console.log(fixture.finished);
+                console.log(teamLogos)
+                console.log(homeTeam)
+                console.log(awayTeam)
                 if (!fixture.finished_provisional && fixture.minutes > 0) {
                   return <LiveScores key={fixture.id} />;
                 } else {
                 return (
                     <li key={fixture.id} className="grid grid-cols-3 border-b py-2">
                     <div className="flex items-center">
+                    
                       <img src={teamLogos[homeTeam]} alt={`${homeTeam} logo`} className="w-6 h-6 mr-2" />
                       <span className="font-bold">{homeTeam}</span>
                     </div>
