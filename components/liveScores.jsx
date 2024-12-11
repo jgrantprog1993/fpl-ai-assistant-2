@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import teamLogos from '../utils/teamLogos';
-
+import { sanitizeTeamName } from '../utils/teamLogos'; 
 const LiveScores = () => {
   const [currentGameweek, setCurrentGameweek] = useState(null);
   const [liveFixtures, setLiveFixtures] = useState([]);

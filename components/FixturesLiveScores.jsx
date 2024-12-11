@@ -3,6 +3,9 @@ import Appbar from '../components/appbar'; // Import your Appbar component
 import LiveScores from '../components/liveScores'; // Import the LiveScores component
 import teamLogos from '../utils/teamLogos'; // Adjust the path as necessary
 import { sanitizeTeamName } from '../utils/teamLogos'; 
+import ChevronDownIcon from '@heroicons/react/24/solid/ChevronDownIcon';
+import ChevronUpIcon from '@heroicons/react/24/solid/ChevronUpIcon';
+import MatchStats from './matchStats';
 
 const FixturesLiveScores = () => {
   const [fixtures, setFixtures] = useState([]);
@@ -10,6 +13,7 @@ const FixturesLiveScores = () => {
   const [loading, setLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(0); // Current gameweek
   const [allFixtures, setAllFixtures] = useState([]); // All fixtures
+  const [dropdownOpen, setDropdownOpen] = useState([]);
 
   useEffect(() => {
     const fetchCurrentGameweek = async () => {
@@ -72,6 +76,10 @@ const FixturesLiveScores = () => {
     }
   };
 
+  const toggleDropdown = (id) => {
+    setDropdownOpen(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+  
   if (loading) {
     return <div>Loading fixtures...</div>;
   }
@@ -103,38 +111,47 @@ const FixturesLiveScores = () => {
                 const awayScore = fixture.team_a_score;
                 const isFinished = fixture.finished_provisional;
                 const matchDateTime = new Date(fixture.kickoff_time);
+                const fixtureStats = fixture.stats;
                 // console.log(fixture.finished_provisional, fixture.minutes);
                 // console.log(fixture.finished);
-                console.log(teamLogos)
-                console.log(homeTeam)
-                console.log(awayTeam)
+                
                 if (!fixture.finished_provisional && fixture.minutes > 0) {
                   return <LiveScores key={fixture.id} />;
                 } else {
                 return (
-                    <li key={fixture.id} className="grid grid-cols-3 border-b py-2">
-                    <div className="flex items-center">
-                    
-                      <img src={teamLogos[homeTeam]} alt={`${homeTeam} logo`} className="w-6 h-6 mr-2" />
-                      <span className="font-bold">{homeTeam}</span>
-                    </div>
-                    <div className="justify-center" style={{ width: '150px', textAlign: 'center' }}> {/* Adjusted width and text alignment */}
-                      {isFinished ? (
-                        <span className="text-green-600 font-bold">
-                          {homeScore} - {awayScore}
-                        </span>
-                      ) : (
-                        <span className="text-gray-500 text-xs">
+                  <li key={fixture.id} className="grid grid-cols-9 border-b py-2" onClick={() => toggleDropdown(fixture.id)}>
+                  <div className="col-span-2 flex items-center">
+                    <img src={teamLogos[homeTeam]} alt={`${homeTeam} logo`} className="w-6 h-6 mr-2" />
+                    <span className="font-bold whitespace-nowrap">{homeTeam}</span>
+                  </div>
+                  <div className="col-span-4 justify-center text-center">
+                    {isFinished ? (
+                      <span className="text-green-600 font-bold">
+                        {homeScore} - {awayScore}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500 text-xs">
                         <p className='block'>{matchDateTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} </p>
                         <p className='block'>{matchDateTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })}</p>
                       </span>
-                      )}
-                    </div>
-                    <div className="flex items-center">
+                    )}
+                  </div>
+                  <div className="col-span-2 flex items-center">
                     <img src={teamLogos[awayTeam]} alt={`${awayTeam} logo`} className="w-6 h-6 mr-2" />
-                      <span className="font-bold">{awayTeam}</span>
+                    <span className="font-bold whitespace-nowrap">{awayTeam}</span>
+                  </div>
+                  <div className="col-span-1 flex justify-end items-center">
+                    {dropdownOpen[fixture.id] ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
+                  </div>
+                  {dropdownOpen[fixture.id] && (
+                    // <MatchStats key={fixture.id}></MatchStats>
+                    <div className="overflow-hidden col-span-8 grid grid-cols-2 divide-x divide-gray-200">
+                     <div className="p-4">
+                     <MatchStats fixtureId={fixture.id} stats={fixture.stats} />
+                     </div>
                     </div>
-                  </li>
+                  )}
+                </li>
                 );
               }
               })}
